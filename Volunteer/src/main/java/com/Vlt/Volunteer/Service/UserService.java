@@ -3,6 +3,7 @@ package com.Vlt.Volunteer.Service;
 import com.Vlt.Volunteer.Dao.UserDao;
 import com.Vlt.Volunteer.Entity.Person;
 import com.Vlt.Volunteer.Dao.UserDaoImpl;
+import com.Vlt.Volunteer.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,8 @@ public class UserService<T> {
     }
 
     public List<Person> getUsersViaParams(String param,String type, Object value ) {
+
+        param = Utilities.ConvertStringCameltoUnder(param);
 
         List<Person> usersviaName = userDao.getUsersViaParam(param, type, value );
 

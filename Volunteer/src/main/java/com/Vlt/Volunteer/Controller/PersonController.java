@@ -47,6 +47,8 @@ public class PersonController {
 
         try {
 
+
+
             List<Person> users = userService.getUsersViaParams(name,type,value);
             ResponseEntity responseEntity = new ResponseEntity(users, HttpStatus.OK);
             return responseEntity;

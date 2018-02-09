@@ -1,6 +1,8 @@
 package com.Vlt.Volunteer.Dao;
 
 import com.Vlt.Volunteer.Entity.Person;
+import com.Vlt.Volunteer.Utilities;
+import org.hibernate.sql.CaseFragment;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -8,11 +10,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.ParameterExpression;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.sql.Date;
+import java.text.Format;
 import java.util.List;
 
 @Repository
@@ -62,9 +62,14 @@ public class UserDaoImpl<T> implements UserDao<T>  {
         Root<Person> from = criteriaQuery.from(Person.class);
         criteriaQuery.select(from);
 //        ParameterExpression<String> paramDB = builder.parameter(String.class);
-        ParameterExpression paramDB = generateParameterExpression(builder, type);
-        System.out.println(value.getClass());
-        criteriaQuery.where(builder.equal(from.get(param),paramDB));
+        ParameterExpression paramDB = Utilities.generateParameterExpression(builder, type);
+
+        Predicate predicate = builder.equal(from.get(param), paramDB);
+
+
+
+//        criteriaQuery.where(builder.equal(from.get(param),paramDB));
+        criteriaQuery.where(predicate);
         if(type.equals("Date")) {
             value = (T) Date.valueOf(value.toString());
         }
@@ -76,23 +81,5 @@ public class UserDaoImpl<T> implements UserDao<T>  {
         return resultList;
     }
 
-    public ParameterExpression generateParameterExpression( CriteriaBuilder builder, String type) {
 
-            if(type.equals("String")) {
-                ParameterExpression<String> paramDB = builder.parameter(String.class);
-                return paramDB;
-            }
-        else if(type.equals("Integer")) {
-            ParameterExpression<Integer> paramDB = builder.parameter(Integer.class);
-            return paramDB;
-        }
-            else if(type.equals("Date")) {
-            ParameterExpression<Date> paramDB = builder.parameter(Date.class);
-            return paramDB;
-        }
-
-        else {
-                return null;
-            }
-    }
 }
